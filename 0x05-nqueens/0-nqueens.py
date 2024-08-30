@@ -1,66 +1,93 @@
 #!/usr/bin/python3
-"""Solves N-Queens Problem"""
-import sys
+
+"""Solves the N-Queens challenge."""
 
 
-class NQueen:
-    """Class for solving N-Queen Problem"""
+def n_queens(n: int):
+    """
+    Solve the N-Queens challenge.
 
-    def __init__(self, n):
-        """Global Variables"""
-        self.n = n
-        self.x = [0 for i in range(n + 1)]
-        self.res = []
+    Args:
+        n (int): The size of the chessboard.
 
-    def place(self, k, i):
+    Returns:
+        The chessboard with the Queens placed in non-attacking positions.
+    """
+
+    def is_non_attack(board: list, row: int, col: int) -> bool:
         """
-        Checks if k Queen can be placed in i column (True)
-        or if the are attacking queens in row or diagonal (False)
-        """
+        Check whether a slot is non-attacking when a Queen is placed.
 
-        for j in range(1, k):
-            if self.x[j] == i or \
-               abs(self.x[j] - i) == abs(j - k):
-                return 0
-        return 1
-
-    def nQueen(self, k):
-        """
-        Tries to place every queen in the board
         Args:
-        k: starting queen from which to evaluate (should be 1)
+            board (list): The board to check.
+            row (int): The current row on the board.
+            col (int): The column of the board.
+
+        Returns:
+            bool: True if the position leads to a non-attacking placement,
+            else False
         """
-        for i in range(1, self.n + 1):
-            if self.place(k, i):
-                self.x[k] = i
-                if k == self.n:
-                    solution = []
-                    for i in range(1, self.n + 1):
-                        solution.append([i - 1, self.x[i] - 1])
-                    self.res.append(solution)
-                else:
-                    self.nQueen(k + 1)
-        return self.res
+        for i in range(row):
+            if (
+                board[i] == col
+                or board[i] - i == col - row
+                or board[i] + i == col + row
+            ):
+                return False
+
+        return True
+
+    def insert_queen(board: list, row: int) -> None:
+        """
+        Handle the placement of Queens in a non-attacking fashion.
+
+        Args:
+            board (list): The board to insert into (temporal).
+            row (int): The current row in the board.
+        """
+        if row == n:  # base case
+            chessboard.append([[i, board[i]] for i in range(n)])
+            return
+
+        for col in range(n):
+            if is_non_attack(board, row, col):
+                board[row] = col
+                insert_queen(board, row + 1)
+                board[row] = 0
+
+    chessboard = []
+    board = [0] * n
+    insert_queen(board, 0)
+
+    return chessboard
 
 
-if len(sys.argv) != 2:
-    print("Usage: nqueens N")
-    sys.exit(1)
+def print_non_attack_combinations(chessboard) -> None:
+    """
+    Print all the non-attacking combinations of N-Queens.
 
-N = sys.argv[1]
+    Args:
+        chessboard: The list of all non-attacking combinations.
+    """
+    for row in chessboard:
+        print(row)
 
-try:
-    N = int(N)
-except ValueError:
-    print("N must be a number")
-    sys.exit(1)
 
-if N < 4:
-    print("N must be at least 4")
-    sys.exit(1)
+if __name__ == "__main__":
+    """Entry point"""
+    import sys
 
-queen = NQueen(N)
-res = queen.nQueen(1)
+    if len(sys.argv) != 2:
+        print("Usage: nqueens N")
+        sys.exit(1)
 
-for i in res:
-    print(i)
+    if not sys.argv[1].isdigit():
+        print("N must be a number")
+        sys.exit(1)
+
+    N = int(sys.argv[1])
+    if N < 4:
+        print("N must be at least 4")
+        sys.exit(1)
+
+    print_non_attack_combinations(n_queens(N))
