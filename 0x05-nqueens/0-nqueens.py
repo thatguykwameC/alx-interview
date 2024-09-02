@@ -1,10 +1,10 @@
 #!/usr/bin/python3
-"""Solves the N-Queens challenge."""
+""" Solves the N-Queens challenge. """
 import sys
 
 
 class NQueensSolver:
-    """ Solves the N Queens Problem """
+    """ Solves the N-Queens challenge. """
     def __init__(self, size):
         """ Constructor to init the board and solutions """
         self.size = size
@@ -12,12 +12,12 @@ class NQueensSolver:
         self.solutions = []
 
     def solve(self):
-        """ Solves the N Queens prob and stores solution """
+        """ Solves the N-Queens challenge and saves solution """
         self._place_queen(0)
         return self.solutions
 
     def _place_queen(self, row):
-        """ Recursively tries too place a queen in each row """
+        """ Recursively tries to place a queen in each row """
         if row == self.size:
             self.solutions.append(self._create_solution())
             return
@@ -29,7 +29,7 @@ class NQueensSolver:
                 self.board[row] = -1
 
     def _is_safe(self, row, col):
-        """ Checks if placeing a queen at row & col is safe """
+        """ Checks if placing a queen at row & col is safe """
         for r in range(row):
             c = self.board[r]
             if c == col or abs(c - col) == abs(r - row):
