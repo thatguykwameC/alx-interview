@@ -1,93 +1,75 @@
 #!/usr/bin/python3
-
 """Solves the N-Queens challenge."""
+import sys
 
 
-def n_queens(n: int):
-    """
-    Solve the N-Queens challenge.
+class NQueensSolver:
+    """ Solves the N Queens Problem """
+    def __init__(self, size):
+        """ Constructor to init the board and solutions """
+        self.size = size
+        self.board = [-1] * size
+        self.solutions = []
 
-    Args:
-        n (int): The size of the chessboard.
+    def solve(self):
+        """ Solves the N Queens prob and stores solution """
+        self._place_queen(0)
+        return self.solutions
 
-    Returns:
-        The chessboard with the Queens placed in non-attacking positions.
-    """
-
-    def is_non_attack(board: list, row: int, col: int) -> bool:
-        """
-        Check whether a slot is non-attacking when a Queen is placed.
-
-        Args:
-            board (list): The board to check.
-            row (int): The current row on the board.
-            col (int): The column of the board.
-
-        Returns:
-            bool: True if the position leads to a non-attacking placement,
-            else False
-        """
-        for i in range(row):
-            if (
-                board[i] == col
-                or board[i] - i == col - row
-                or board[i] + i == col + row
-            ):
-                return False
-
-        return True
-
-    def insert_queen(board: list, row: int) -> None:
-        """
-        Handle the placement of Queens in a non-attacking fashion.
-
-        Args:
-            board (list): The board to insert into (temporal).
-            row (int): The current row in the board.
-        """
-        if row == n:  # base case
-            chessboard.append([[i, board[i]] for i in range(n)])
+    def _place_queen(self, row):
+        """ Recursively tries too place a queen in each row """
+        if row == self.size:
+            self.solutions.append(self._create_solution())
             return
 
-        for col in range(n):
-            if is_non_attack(board, row, col):
-                board[row] = col
-                insert_queen(board, row + 1)
-                board[row] = 0
+        for c in range(self.size):
+            if self._is_safe(row, c):
+                self.board[row] = c
+                self._place_queen(row + 1)
+                self.board[row] = -1
 
-    chessboard = []
-    board = [0] * n
-    insert_queen(board, 0)
+    def _is_safe(self, row, col):
+        """ Checks if placeing a queen at row & col is safe """
+        for r in range(row):
+            c = self.board[r]
+            if c == col or abs(c - col) == abs(r - row):
+                return False
+        return True
 
-    return chessboard
+    def _create_solution(self):
+        """ Creates a solution from the current board state """
+        return [[i, self.board[i]] for i in range(self.size)]
 
 
-def print_non_attack_combinations(chessboard) -> None:
-    """
-    Print all the non-attacking combinations of N-Queens.
+class NQueensCLI:
+    """ Class responsible for user handling io """
+    def run(self):
+        """ Runs the CLI and handles io """
+        size = self._validate_input()
+        solver = NQueensSolver(size)
+        solutions = solver.solve()
+        for solution in solutions:
+            print(solution)
 
-    Args:
-        chessboard: The list of all non-attacking combinations.
-    """
-    for row in chessboard:
-        print(row)
+    def _validate_input(self):
+        """ Validates user input """
+        if len(sys.argv) != 2:
+            print("Usage: nqueens N")
+            exit(1)
+
+        try:
+            size = int(sys.argv[1])
+        except ValueError:
+            print("N must be a number")
+            exit(1)
+
+        if size < 4:
+            print("N must be at least 4")
+            exit(1)
+
+        return size
 
 
 if __name__ == "__main__":
-    """Entry point"""
-    import sys
-
-    if len(sys.argv) != 2:
-        print("Usage: nqueens N")
-        sys.exit(1)
-
-    if not sys.argv[1].isdigit():
-        print("N must be a number")
-        sys.exit(1)
-
-    N = int(sys.argv[1])
-    if N < 4:
-        print("N must be at least 4")
-        sys.exit(1)
-
-    print_non_attack_combinations(n_queens(N))
+    cli = NQueensCLI()
+    cli.run()
