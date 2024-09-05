@@ -1,30 +1,30 @@
 #!/usr/bin/node
 /* script that prints the characters of a Star Wars movie */
 
-const req = require('request');
-const baseUrl = `https://swapi-api.alx-tools.com/api/films/${process.argv[2]}`;
+const req = require('request')
+const baseUrl = `https://swapi-api.alx-tools.com/api/films/${process.argv[2]}`
 
 req(baseUrl, (err, res, body) => {
-  if (err) throw err;
+  if (err) throw err
   if (res.statusCode !== 200) {
-    console.error('status code issue:', res.statusCode);
-    return;
+    console.error('status code issue:', res.statusCode)
+    return
   }
 
-  charsChecker(JSON.parse(body).characters, 0);
-});
+  charsChecker(JSON.parse(body).characters, 0)
+})
 
 function charsChecker(chars, idx) {
-  if (idx >= chars.length) return;
+  if (idx >= chars.length) return
 
   req(chars[idx], (err, res, body) => {
-    if (err) throw err;
+    if (err) throw err
 
     if (res.statusCode === 200) {
-      console.log(JSON.parse(body).name);
+      console.log(JSON.parse(body).name)
     } else {
-      console.error('Status code wrong:', res.statusCode);
+      console.error('Status code wrong:', res.statusCode)
     }
-    charsChecker(chars, idx + 1);
-  });
+    charsChecker(chars, idx + 1)
+  })
 }
