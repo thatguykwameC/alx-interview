@@ -1,4 +1,5 @@
 #!/usr/bin/node
+/* script that prints the characters of a Star Wars movie */
 
 const req = require('request');
 const baseUrl = `https://swapi-api.alx-tools.com/api/films/${process.argv[2]}`;
