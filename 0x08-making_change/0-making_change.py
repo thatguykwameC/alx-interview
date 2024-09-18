@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" Using Greedy Approach """
+"""A module that determines the fewest number of coins needed"""
 
 
 def makeChange(coins, total):
