@@ -2,8 +2,8 @@
 """ Using Greedy Approach """
 
 
-def makeChange(coins, total) -> int:
-    """ 
+def makeChange(coins, total):
+    """
     Determines the fewest number of coins needed
     to meet a given amount total
     """
@@ -11,12 +11,11 @@ def makeChange(coins, total) -> int:
         return 0
 
     coins.sort(reverse=True)
-
-    bunch_of_coins = 0
-    for c in coins:
-        if total == 0:
-            break
-        bunch_of_coins += total // c
-        total %= c
-
-    return bunch_of_coins if total == 0 else -1
+    num_coins = 0
+    idx = 0
+    while total > 0 and idx < len(coins):
+        while total >= coins[idx]:
+            total -= coins[idx]
+            num_coins += 1
+        idx += 1
+    return num_coins if total == 0 else -1
