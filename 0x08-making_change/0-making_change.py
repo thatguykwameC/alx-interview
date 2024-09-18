@@ -1,17 +1,22 @@
 #!/usr/bin/python3
-"""Module for making change"""
+""" Using Greedy Approach """
 
 
-def make_change(coins, total):
+def makeChange(coins, total) -> int:
+    """ 
+    Determines the fewest number of coins needed
+    to meet a given amount total
     """
-    Determine the fewest number of coins needed to
-    make change to meet a given amount total
-    """
+    if total <= 0:
+        return 0
+
     coins.sort(reverse=True)
 
-    num_coins = 0
-    for coin in coins:
-        num_coins += total // coin
-        total %= coin
+    bunch_of_coins = 0
+    for c in coins:
+        if total == 0:
+            break
+        bunch_of_coins += total // c
+        total %= c
 
-    return num_coins if total == 0 else -1
+    return bunch_of_coins if total == 0 else -1
